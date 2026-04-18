@@ -1,0 +1,1002 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>StaticX Overlay</title>
+    <link rel="icon" href="/overlaysite/staticx.ico" type="image/x-icon" />
+    <link
+      rel="shortcut icon"
+      href="/overlaysite/staticx.ico"
+      type="image/x-icon"
+    />
+
+    <meta property="og:title" content="StaticX Overlay" />
+    <meta
+      property="og:description"
+      content="Minimal · Fast · Universal Overlay"
+    />
+    <meta property="og:image" content="https://yourdomain.com/staticx.png" />
+    <meta property="og:url" content="https://yourdomain.com/" />
+    <meta property="og:type" content="website" />
+
+    <meta name="theme-color" content="#4cffc3" />
+
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="StaticX Overlay" />
+    <meta
+      name="twitter:description"
+      content="Minimal · Fast · Universal Overlay"
+    />
+    <meta name="twitter:image" content="https://yourdomain.com/staticx.png" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --accent: #4cffc3;
+        --accent2: #6aaeff;
+        --bg: #07070a;
+        --bg2: #0d0d12;
+        --surface: rgba(255, 255, 255, 0.03);
+        --border: rgba(255, 255, 255, 0.07);
+        --muted: #4a4a58;
+        --text: #b0b0c4;
+        --white: #ffffff;
+        --key-bg: rgba(76, 255, 195, 0.07);
+        --key-border: rgba(76, 255, 195, 0.18);
+        --glow: rgba(76, 255, 195, 0.07);
+        --nav-bg: rgba(7, 7, 10, 0.88);
+      }
+
+      [data-theme="light"] {
+        --accent: #00c48c;
+        --accent2: #3b82f6;
+        --bg: #f2f2f5;
+        --bg2: #ffffff;
+        --surface: rgba(0, 0, 0, 0.03);
+        --border: rgba(0, 0, 0, 0.08);
+        --muted: #8888a0;
+        --text: #4a4a60;
+        --white: #111118;
+        --key-bg: rgba(0, 196, 140, 0.07);
+        --key-border: rgba(0, 196, 140, 0.22);
+        --glow: rgba(0, 196, 140, 0.06);
+        --nav-bg: rgba(242, 242, 245, 0.92);
+      }
+
+      [data-theme="ice"] {
+        --accent: #22d3ee;
+        --accent2: #818cf8;
+        --bg: #04060f;
+        --bg2: #080c1a;
+        --surface: rgba(34, 211, 238, 0.03);
+        --border: rgba(34, 211, 238, 0.08);
+        --muted: #2e3a5a;
+        --text: #8090b8;
+        --white: #dde8ff;
+        --key-bg: rgba(34, 211, 238, 0.07);
+        --key-border: rgba(34, 211, 238, 0.18);
+        --glow: rgba(34, 211, 238, 0.08);
+        --nav-bg: rgba(4, 6, 15, 0.9);
+      }
+
+      [data-theme="lava"] {
+        --accent: #ff6030;
+        --accent2: #ff1f5a;
+        --bg: #090309;
+        --bg2: #110408;
+        --surface: rgba(255, 96, 48, 0.04);
+        --border: rgba(255, 96, 48, 0.1);
+        --muted: #502828;
+        --text: #c09080;
+        --white: #fff0ec;
+        --key-bg: rgba(255, 96, 48, 0.08);
+        --key-border: rgba(255, 96, 48, 0.22);
+        --glow: rgba(255, 96, 48, 0.09);
+        --nav-bg: rgba(9, 3, 9, 0.9);
+      }
+
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: "DM Sans", sans-serif;
+        font-weight: 300;
+        overflow-x: hidden;
+        transition:
+          background 0.35s,
+          color 0.35s;
+      }
+
+      nav {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 99;
+        padding: 20px 56px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        border-bottom: 1px solid transparent;
+        transition:
+          border-color 0.3s,
+          background 0.3s;
+      }
+
+      nav.scrolled {
+        background: var(--nav-bg);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border-color: var(--border);
+      }
+
+      .nav-logo {
+        font-family: "Space Mono", monospace;
+        font-size: 14px;
+        color: var(--white);
+        letter-spacing: 0.08em;
+        transition: color 0.35s;
+      }
+
+      .nav-right {
+        display: flex;
+        align-items: center;
+        gap: 30px;
+      }
+
+      .nav-links {
+        display: flex;
+        gap: 26px;
+      }
+
+      .nav-links a {
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 13px;
+        letter-spacing: 0.03em;
+        transition: color 0.2s;
+      }
+
+      .nav-links a:hover {
+        color: var(--white);
+      }
+
+      .theme-tabs {
+        display: flex;
+        gap: 2px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 3px;
+        transition:
+          background 0.35s,
+          border-color 0.35s;
+      }
+
+      .theme-tab {
+        font-family: "Space Mono", monospace;
+        font-size: 9px;
+        letter-spacing: 0.08em;
+        padding: 5px 10px;
+        border-radius: 5px;
+        border: none;
+        background: transparent;
+        color: var(--muted);
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          color 0.2s;
+      }
+
+      .theme-tab.active {
+        background: var(--accent);
+        color: #000;
+      }
+
+      .hero {
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 130px 40px 100px;
+        position: relative;
+      }
+
+      .hero-grid {
+        position: absolute;
+        inset: 0;
+        background-image:
+          linear-gradient(var(--border) 1px, transparent 1px),
+          linear-gradient(90deg, var(--border) 1px, transparent 1px);
+        background-size: 56px 56px;
+        mask-image: radial-gradient(
+          ellipse 65% 55% at 50% 50%,
+          black,
+          transparent
+        );
+        pointer-events: none;
+      }
+
+      .hero-glow {
+        position: absolute;
+        width: 700px;
+        height: 500px;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -60%);
+        background: radial-gradient(ellipse, var(--glow) 0%, transparent 65%);
+        pointer-events: none;
+        transition: background 0.35s;
+      }
+
+      .live-pill {
+        position: relative;
+        z-index: 1;
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        padding: 6px 15px;
+        border: 1px solid var(--border);
+        border-radius: 999px;
+        font-family: "Space Mono", monospace;
+        font-size: 10px;
+        letter-spacing: 0.1em;
+        color: var(--muted);
+        margin-bottom: 30px;
+        background: var(--surface);
+        animation: fadeUp 0.5s ease both;
+        transition:
+          border-color 0.35s,
+          color 0.35s,
+          background 0.35s;
+      }
+
+      .live-dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--accent);
+        box-shadow: 0 0 8px var(--accent);
+        animation: blink 2s infinite;
+        transition:
+          background 0.35s,
+          box-shadow 0.35s;
+      }
+
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.2;
+        }
+      }
+
+      .hero-title {
+        position: relative;
+        z-index: 1;
+        font-family: "Space Mono", monospace;
+        font-size: clamp(52px, 9vw, 104px);
+        font-weight: 700;
+        line-height: 1;
+        letter-spacing: -0.03em;
+        color: var(--white);
+        animation: fadeUp 0.5s 0.08s ease both;
+        transition: color 0.35s;
+      }
+
+      .hero-title .grad {
+        background: linear-gradient(90deg, var(--accent), var(--accent2));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+
+      .hero-sub {
+        position: relative;
+        z-index: 1;
+        margin-top: 15px;
+        font-size: 11px;
+        color: var(--muted);
+        letter-spacing: 0.2em;
+        text-transform: uppercase;
+        animation: fadeUp 0.5s 0.16s ease both;
+        transition: color 0.35s;
+      }
+
+      .widget {
+        position: relative;
+        z-index: 1;
+        margin-top: 50px;
+        display: inline-flex;
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 0 50px var(--glow);
+        animation: fadeUp 0.5s 0.24s ease both;
+        transition:
+          background 0.35s,
+          border-color 0.35s,
+          box-shadow 0.35s;
+      }
+
+      .stat {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 18px 30px;
+        gap: 7px;
+        border-right: 1px solid var(--border);
+        transition: border-color 0.35s;
+      }
+
+      .stat:last-child {
+        border-right: none;
+      }
+
+      .stat-label {
+        font-family: "Space Mono", monospace;
+        font-size: 9px;
+        letter-spacing: 0.16em;
+        color: var(--muted);
+        text-transform: uppercase;
+        transition: color 0.35s;
+      }
+
+      .stat-val {
+        font-family: "Space Mono", monospace;
+        font-size: 17px;
+        color: var(--accent);
+        font-weight: 700;
+        line-height: 1;
+        transition: color 0.35s;
+      }
+
+      .hero-cta {
+        position: relative;
+        z-index: 1;
+        margin-top: 42px;
+        display: inline-flex;
+        align-items: center;
+        gap: 9px;
+        padding: 13px 28px;
+        background: var(--accent);
+        color: #000;
+        font-weight: 500;
+        font-size: 13px;
+        text-decoration: none;
+        border-radius: 8px;
+        letter-spacing: 0.03em;
+        animation: fadeUp 0.5s 0.32s ease both;
+        transition:
+          opacity 0.2s,
+          transform 0.2s,
+          background 0.35s;
+      }
+
+      .hero-cta:hover {
+        opacity: 0.82;
+        transform: translateY(-2px);
+      }
+
+      .div-line {
+        width: 1px;
+        height: 72px;
+        background: linear-gradient(
+          to bottom,
+          transparent,
+          var(--border),
+          transparent
+        );
+        margin: 0 auto;
+      }
+
+      .section {
+        padding: 96px 56px;
+        max-width: 960px;
+        margin: 0 auto;
+      }
+
+      .s-label {
+        font-family: "Space Mono", monospace;
+        font-size: 9px;
+        letter-spacing: 0.22em;
+        color: var(--accent);
+        text-transform: uppercase;
+        margin-bottom: 12px;
+        transition: color 0.35s;
+      }
+
+      .s-title {
+        font-size: clamp(26px, 3.5vw, 40px);
+        font-weight: 400;
+        color: var(--white);
+        line-height: 1.2;
+        margin-bottom: 40px;
+        transition: color 0.35s;
+      }
+
+      .dl-box {
+        background: var(--bg2);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        overflow: hidden;
+        transition:
+          background 0.35s,
+          border-color 0.35s;
+      }
+
+      .dl-main {
+        padding: 38px 40px;
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 24px;
+        border-bottom: 1px solid var(--border);
+        transition: border-color 0.35s;
+      }
+
+      .dl-info {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .dl-header {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+      }
+
+      .dl-name {
+        font-size: 21px;
+        font-weight: 400;
+        color: var(--white);
+        transition: color 0.35s;
+      }
+
+      .dl-tag {
+        font-family: "Space Mono", monospace;
+        font-size: 9px;
+        letter-spacing: 0.12em;
+        padding: 4px 11px;
+        border-radius: 999px;
+        border: 1px solid var(--key-border);
+        color: var(--accent);
+        transition:
+          border-color 0.35s,
+          color 0.35s;
+      }
+
+      .dl-desc {
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.65;
+        max-width: 420px;
+        transition: color 0.35s;
+      }
+
+      .dl-btn-primary {
+        flex-shrink: 0;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 24px;
+        background: var(--accent);
+        color: #000;
+        font-weight: 500;
+        font-size: 13px;
+        text-decoration: none;
+        border-radius: 8px;
+        white-space: nowrap;
+        transition:
+          opacity 0.2s,
+          transform 0.2s,
+          background 0.35s;
+      }
+
+      .dl-btn-primary:hover {
+        opacity: 0.82;
+        transform: translateY(-1px);
+      }
+
+      .dl-secondary {
+        display: flex;
+      }
+
+      .dl-alt {
+        flex: 1;
+        padding: 24px 40px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        border-right: 1px solid var(--border);
+        transition:
+          background 0.15s,
+          border-color 0.35s;
+      }
+
+      .dl-alt:last-child {
+        border-right: none;
+      }
+      .dl-alt:hover {
+        background: var(--surface);
+      }
+
+      .dl-alt-info {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+      }
+
+      .dl-alt-name {
+        font-size: 14px;
+        color: var(--white);
+        transition: color 0.35s;
+      }
+
+      .dl-alt-sub {
+        font-size: 12px;
+        color: var(--muted);
+        transition: color 0.35s;
+      }
+
+      .dl-alt-link {
+        font-family: "Space Mono", monospace;
+        font-size: 11px;
+        color: var(--muted);
+        text-decoration: none;
+        padding: 7px 14px;
+        border: 1px solid var(--border);
+        border-radius: 7px;
+        white-space: nowrap;
+        flex-shrink: 0;
+        transition:
+          border-color 0.2s,
+          color 0.2s;
+      }
+
+      .dl-alt-link:hover {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+
+      .shortcuts-list {
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        overflow: hidden;
+        margin-bottom: 36px;
+        transition: border-color 0.35s;
+      }
+
+      .shortcut-row {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 17px 28px;
+        border-bottom: 1px solid var(--border);
+        transition:
+          background 0.15s,
+          border-color 0.35s;
+      }
+
+      .shortcut-row:last-child {
+        border-bottom: none;
+      }
+      .shortcut-row:hover {
+        background: var(--surface);
+      }
+
+      .sc-action {
+        font-size: 14px;
+        color: var(--text);
+        transition: color 0.35s;
+      }
+
+      .sc-key {
+        font-family: "Space Mono", monospace;
+        font-size: 11px;
+        color: var(--accent);
+        background: var(--key-bg);
+        padding: 4px 12px;
+        border-radius: 6px;
+        border: 1px solid var(--key-border);
+        transition:
+          background 0.35s,
+          border-color 0.35s,
+          color 0.35s;
+      }
+
+      .note-block {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 12px;
+        padding: 24px 28px;
+        display: flex;
+        gap: 16px;
+        align-items: flex-start;
+        transition:
+          background 0.35s,
+          border-color 0.35s;
+      }
+
+      .note-chip {
+        font-family: "Space Mono", monospace;
+        font-size: 10px;
+        color: var(--accent);
+        background: var(--key-bg);
+        border: 1px solid var(--key-border);
+        border-radius: 7px;
+        padding: 6px 10px;
+        flex-shrink: 0;
+        letter-spacing: 0.06em;
+        transition:
+          background 0.35s,
+          border-color 0.35s,
+          color 0.35s;
+      }
+
+      .note-text {
+        font-size: 13px;
+        color: var(--muted);
+        line-height: 1.7;
+        transition: color 0.35s;
+      }
+      .note-text code {
+        font-family: "Space Mono", monospace;
+        color: var(--white);
+        font-size: 12px;
+        transition: color 0.35s;
+      }
+
+      footer {
+        border-top: 1px solid var(--border);
+        padding: 36px 56px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        transition: border-color 0.35s;
+      }
+
+      .footer-left {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+      }
+
+      .footer-logo {
+        font-family: "Space Mono", monospace;
+        font-size: 13px;
+        color: var(--white);
+        letter-spacing: 0.08em;
+        transition: color 0.35s;
+      }
+
+      .footer-by {
+        font-size: 12px;
+        color: var(--muted);
+        transition: color 0.35s;
+      }
+
+      .footer-links {
+        display: flex;
+        gap: 22px;
+      }
+
+      .footer-links a {
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 13px;
+        transition: color 0.2s;
+      }
+
+      .footer-links a:hover {
+        color: var(--accent);
+      }
+
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(18px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      .reveal {
+        opacity: 0;
+        transform: translateY(20px);
+        transition:
+          opacity 0.55s ease,
+          transform 0.55s ease;
+      }
+
+      .reveal.visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      @media (max-width: 720px) {
+        nav {
+          padding: 16px 20px;
+        }
+        .nav-links {
+          display: none;
+        }
+        .section {
+          padding: 68px 20px;
+        }
+        .dl-main {
+          flex-direction: column;
+          align-items: flex-start;
+        }
+        .dl-secondary {
+          flex-direction: column;
+        }
+        .dl-alt {
+          border-right: none;
+          border-bottom: 1px solid var(--border);
+        }
+        .dl-alt:last-child {
+          border-bottom: none;
+        }
+        .stat {
+          padding: 14px 16px;
+        }
+        .stat-val {
+          font-size: 14px;
+        }
+        footer {
+          flex-direction: column;
+          gap: 18px;
+          text-align: center;
+          align-items: center;
+        }
+        .theme-tabs {
+          flex-wrap: wrap;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <nav id="nav">
+      <div class="nav-logo">STATICX</div>
+      <div class="nav-right">
+        <div class="nav-links">
+          <a href="#hero">Home</a>
+          <a href="#download">Download</a>
+          <a href="#docs">Docs</a>
+        </div>
+        <div class="theme-tabs" id="themeTabs">
+          <button class="theme-tab active" data-theme="">DARK</button>
+          <button class="theme-tab" data-theme="light">LIGHT</button>
+          <button class="theme-tab" data-theme="ice">ICE</button>
+          <button class="theme-tab" data-theme="lava">LAVA</button>
+        </div>
+      </div>
+    </nav>
+
+    <section id="hero" class="hero">
+      <div class="hero-grid"></div>
+      <div class="hero-glow"></div>
+
+      <div class="live-pill">
+        <span class="live-dot"></span>
+        BETA LIVE
+      </div>
+
+      <h1 class="hero-title">Static<span class="grad">X</span></h1>
+      <p class="hero-sub">minimal · fast · universal overlay</p>
+
+      <div class="widget">
+        <div class="stat">
+          <span class="stat-label">Status</span>
+          <span class="stat-val">Stable</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Version</span>
+          <span class="stat-val">v01.2</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Price</span>
+          <span class="stat-val">Free</span>
+        </div>
+        <div class="stat">
+          <span class="stat-label">Last Updated</span>
+          <span class="stat-val">04/18/2026</span>
+        </div>
+      </div>
+
+      <a href="#download" class="hero-cta">
+        Download Free
+        <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+          <path
+            d="M8 2v9M4 7l4 4 4-4M2 14h12"
+            stroke="currentColor"
+            stroke-width="1.6"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          />
+        </svg>
+      </a>
+    </section>
+
+    <div class="div-line"></div>
+
+    <section id="download" class="section">
+      <p class="s-label reveal">Download</p>
+      <h2 class="s-title reveal">Get StaticX</h2>
+
+      <div class="dl-box reveal">
+        <div class="dl-main">
+          <div class="dl-info">
+            <div class="dl-header">
+              <span class="dl-name">StaticX Stable</span>
+              <span class="dl-tag">v01.2 @Latest</span>
+            </div>
+            <p class="dl-desc">
+              The recommended build. Zero bloat, all core features. Just launch
+              and go.
+            </p>
+          </div>
+          <a
+            href="https://github.com/hanx-gg/staticx/releases/download/%40latest/staticio-v01.2.exe"
+            class="dl-btn-primary"
+          >
+            <svg width="13" height="13" viewBox="0 0 16 16" fill="none">
+              <path
+                d="M8 2v9M4 7l4 4 4-4M2 14h12"
+                stroke="currentColor"
+                stroke-width="1.6"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              />
+            </svg>
+            Download .exe
+          </a>
+        </div>
+        <div class="dl-secondary">
+          <div class="dl-alt">
+            <div class="dl-alt-info">
+              <span class="dl-alt-name">Stable</span>
+              <span class="dl-alt-sub"
+                >Alternative Link for latest version</span
+              >
+            </div>
+            <a
+              href="https://github.com/hanx-gg/staticx/releases/download/%40latest/staticio-v01.2.exe"
+              class="dl-alt-link"
+              >Download →</a
+            >
+          </div>
+          <div class="dl-alt">
+            <div class="dl-alt-info">
+              <span class="dl-alt-name">Early Release</span>
+              <span class="dl-alt-sub">Try the early version of StaticX</span>
+            </div>
+            <a
+              href="https://github.com/hanx-gg/staticx/releases/download/staticx/early.staticio-x.exe"
+              class="dl-alt-link"
+              >Download →</a
+            >
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="div-line"></div>
+
+    <section id="docs" class="section">
+      <p class="s-label reveal">Documentation</p>
+      <h2 class="s-title reveal">Keyboard Shortcuts</h2>
+
+      <div class="shortcuts-list reveal">
+        <div class="shortcut-row">
+          <span class="sc-action">Toggle Overlay</span
+          ><span class="sc-key">CTRL + SHIFT + O</span>
+        </div>
+        <div class="shortcut-row">
+          <span class="sc-action">Scroll Up</span
+          ><span class="sc-key">ALT + ↑</span>
+        </div>
+        <div class="shortcut-row">
+          <span class="sc-action">Scroll Down</span
+          ><span class="sc-key">ALT + ↓</span>
+        </div>
+        <div class="shortcut-row">
+          <span class="sc-action">Click-through Mode</span
+          ><span class="sc-key">CTRL + SHIFT + I</span>
+        </div>
+        <div class="shortcut-row">
+          <span class="sc-action">Open Notes</span
+          ><span class="sc-key">CTRL + SHIFT + E</span>
+        </div>
+        <div class="shortcut-row">
+          <span class="sc-action">Close Overlay</span
+          ><span class="sc-key">CTRL + SHIFT + X</span>
+        </div>
+      </div>
+
+      <div class="note-block reveal">
+        <span class="note-chip">NOTE</span>
+        <p class="note-text">
+          Edit <code>notes.txt</code> in the same directory as the
+          <code>.exe</code> to customize in-game notes. Changes apply on the
+          next overlay open. (Or by reloading note via settings in system tray)
+        </p>
+      </div>
+    </section>
+
+    <footer>
+      <div class="footer-left">
+        <span class="footer-logo">STATICX</span>
+        <span class="footer-by">made by @hanx_lol · © 2026</span>
+      </div>
+      <div class="footer-links">
+        <a href="https://github.com/hanx-gg">GitHub</a>
+        <a href="https://discord.com/users/1142627147333246986">Discord</a>
+        <a href="#">Contact</a>
+      </div>
+    </footer>
+
+    <script>
+      const nav = document.getElementById("nav");
+      window.addEventListener(
+        "scroll",
+        () => {
+          nav.classList.toggle("scrolled", window.scrollY > 20);
+        },
+        { passive: true },
+      );
+
+      document.querySelectorAll(".theme-tab").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document
+            .querySelectorAll(".theme-tab")
+            .forEach((t) => t.classList.remove("active"));
+          btn.classList.add("active");
+          const t = btn.dataset.theme;
+          if (t) {
+            document.documentElement.setAttribute("data-theme", t);
+          } else {
+            document.documentElement.removeAttribute("data-theme");
+          }
+        });
+      });
+
+      const obs = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((e, i) => {
+            if (e.isIntersecting) {
+              setTimeout(() => e.target.classList.add("visible"), i * 70);
+              obs.unobserve(e.target);
+            }
+          });
+        },
+        { threshold: 0.08 },
+      );
+      document.querySelectorAll(".reveal").forEach((el) => obs.observe(el));
+    </script>
+  </body>
+</html>
